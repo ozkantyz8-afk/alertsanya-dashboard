@@ -1,17 +1,13 @@
 :root {
     --bg: #050505;
     --gold: #ffd700;
-    --gold-dim: #b8860b;
     --glass: rgba(255, 255, 255, 0.03);
-    --border: rgba(255, 215, 0, 0.15);
 }
-
-body {
-    background-color: var(--bg);
-    color: #fff;
-    font-family: 'Outfit', sans-serif;
-    margin: 0;
-}
+body { background: var(--bg); color: #fff; font-family: 'Outfit', sans-serif; margin: 0; }
+.terminal-container { padding: 20px; max-width: 600px; margin: 0 auto; }
+.ticker { display: flex; gap: 20px; color: var(--gold); background: rgba(255, 215, 0, 0.05); padding: 10px; border-radius: 10px; margin-bottom: 20px; overflow-x: auto; }
+.feed-item { background: var(--glass); border-left: 3px solid var(--gold); padding: 15px; border-radius: 0 12px 12px 0; margin-bottom: 12px; display: flex; justify-content: space-between; }
+.status-indicator { color: #00ff88; font-size: 12px; font-weight: bold; }
 
 .terminal-container { padding: 15px; max-width: 600px; margin: 0 auto; }
 

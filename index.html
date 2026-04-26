@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alertsanya Terminal</title>
+    <title>Alertsanya Live Terminal</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
@@ -11,52 +11,35 @@
     <div class="terminal-container">
         <!-- Market Ticker -->
         <div class="ticker">
-            <div class="ticker-item">BTC: <span id="btc-price">$65,240</span></div>
-            <div class="ticker-item">ETH: <span id="eth-price">$3,450</span></div>
-            <div class="ticker-item">SOL: <span id="sol-price">$145.2</span></div>
+            <div class="ticker-item">BTC: <span id="btc-price">Yükleniyor...</span></div>
+            <div class="ticker-item">ETH: <span id="eth-price">Yükleniyor...</span></div>
+            <div class="ticker-item">SOL: <span id="sol-price">Yükleniyor...</span></div>
         </div>
 
         <header>
             <div class="brand">
                 <div class="glitch-dot"></div>
-                <h1>ALERTSANYA <span class="v-tag">V4.0</span></h1>
+                <h1>ALERTSANYA <span class="v-tag">LIVE</span></h1>
             </div>
-            <div class="premium-button" onclick="showPricing()">💎 UPGRADE</div>
+            <div class="status-indicator">● CANLI VERİ AKIŞI</div>
         </header>
 
         <!-- Network Selector -->
         <nav class="network-nav">
-            <button class="nav-btn active">ALL</button>
+            <button class="nav-btn active">TÜM AĞLAR</button>
             <button class="nav-btn">SOLANA</button>
             <button class="nav-btn">ETHEREUM</button>
-            <button class="nav-btn">MEME LIST</button>
         </nav>
 
         <!-- Main Feed -->
         <main class="feed-container">
-            <div class="feed-header">
-                <h2>CANLI İSTİHBARAT AKIŞI</h2>
-                <div class="live-pulse"></div>
-            </div>
-
             <div id="main-feed" class="feed-list">
-                <!-- Veriler Supabase'den buraya akacak -->
-                <div class="loading-state">Anya verileri tarıyor...</div>
+                <!-- Veriler buraya akacak -->
+                <div class="loading-state">Balina hareketleri taranıyor...</div>
             </div>
-        </section>
-
-        <!-- Premium Lock Section -->
-        <section class="locked-section">
-            <div class="lock-overlay">
-                <span class="lock-icon">🔒</span>
-                <h3>INSIDER WALLET LIST</h3>
-                <p>Milyon dolarlık kâr eden gizli cüzdanları gör!</p>
-                <button class="buy-btn">150 STARS İLE AÇ</button>
-            </div>
-        </section>
+        </main>
     </div>
 
-    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="app.js"></script>
 </body>
