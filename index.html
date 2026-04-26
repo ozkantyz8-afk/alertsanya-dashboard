@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhaleNexus Dashboard</title>
+    <title>Alertsanya Dashboard</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
@@ -11,18 +11,17 @@
     <div class="app-container">
         <!-- Header -->
         <header>
-           <div class="logo-area">
-    <div class="gold-dot"></div>
-    <h1>Alertsanya <span class="badge">PRO</span></h1>
-</div>
-            <div class="status-indicator">● CANLI</div>
+            <div class="logo-area">
+                <div class="gold-dot"></div>
+                <h1>Alertsanya <span class="badge">PRO</span></h1>
+            </div>
+            <div class="status-indicator">● CANLI AKIŞ</div>
         </header>
 
         <!-- Sentiment Card -->
         <section class="card sentiment">
             <div class="card-header">
                 <h3>Balina Duygusu</h3>
-                <span class="info-icon">ⓘ</span>
             </div>
             <div class="gauge-container">
                 <div class="gauge-bar">
@@ -38,35 +37,77 @@
 
         <!-- Live Feed Section -->
         <section class="feed-section">
-            <h3>Canlı Balina Akışı</h3>
+            <h3>Gerçek Zamanlı Hareketler</h3>
             <div class="feed-list">
-                <div class="feed-item">
-                    <div class="item-left">
-                        <div class="action-icon buy">↑</div>
-                        <div class="details">
-                            <span class="wallet">Alpha Whale</span>
-                            <span class="time">2dk önce</span>
-                        </div>
-                    </div>
-                    <div class="item-right">
-                        <span class="amount">+1,450 SOL</span>
-                    </div>
-                </div>
-
-                <div class="feed-item">
-                    <div class="item-left">
-                        <div class="action-icon sell">↓</div>
-                        <div class="details">
-                            <span class="wallet">Jito Validator</span>
-                            <span class="time">15dk önce</span>
-                        </div>
-                    </div>
-                    <div class="item-right">
-                        <span class="amount">-3,200 SOL</span>
-                    </div>
-                </div>
+                <!-- Veriler buraya Supabase'den canlı gelecek -->
+                <p style="text-align: center; color: #666;">Balina hareketleri bekleniyor...</p>
             </div>
         </section>
     </div>
+
+    <!-- SUPABASE REALTIME SCRIPT -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // SUPABASE BAĞLANTISI
+        const SUPABASE_URL = 'https://apidenfvezstmpbbxser.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwaWRlbmZ2ZXpzdG1wYmJ4c2VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMTQ0NjQsImV4cCI6MjA5Mjc5MDQ2NH0.MFebJX4cHNxMZCKss2y3YM4FJmegbGKyVP0R8M2qtNM';
+        
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // 1. VERİLERİ ÇEK VE LİSTELE
+        async function fetchTransactions() {
+            const { data, error } = await _supabase
+                .from('transactions')
+                .select('*')
+                .order('created_at', { ascending: false })
+                .limit(10);
+
+            if (error) {
+                console.error("Veri çekme hatası:", error);
+            } else {
+                renderTransactions(data);
+            }
+        }
+
+        // 2. EKRANA YAZDIRMA FONKSİYONU
+        function renderTransactions(transactions) {
+            const list = document.querySelector('.feed-list');
+            if (transactions.length === 0) return;
+            
+            list.innerHTML = ''; 
+
+            transactions.forEach(tx => {
+                const time = new Date(tx.created_at).toLocaleTimeString();
+                const item = `
+                    <div class="feed-item">
+                        <div class="item-left">
+                            <div class="action-icon buy">↑</div>
+                            <div class="details">
+                                <span class="wallet">${tx.whale_name || 'Gizli Balina'}</span>
+                                <span class="time">${time}</span>
+                            </div>
+                        </div>
+                        <div class="item-right">
+                            <span class="amount">${tx.amount || '---'} ${tx.token_symbol}</span>
+                        </div>
+                    </div>
+                `;
+                list.innerHTML += item;
+            });
+        }
+
+        // 3. GERÇEK ZAMANLI TAKİP
+        _supabase
+            .channel('any-channel')
+            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'transactions' }, (payload) => {
+                console.log('Yeni işlem!', payload.new);
+                fetchTransactions(); // Yeni veri gelince listeyi yenile
+            })
+            .subscribe();
+
+        // Sayfa açıldığında verileri getir
+        fetchTransactions();
+    </script>
 </body>
 </html>
