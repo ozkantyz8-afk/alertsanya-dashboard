@@ -4,43 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alertsanya Live Terminal</title>
-    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #050505; --gold: #ffd700; --glass: rgba(255, 255, 255, 0.03); --border: rgba(255, 215, 0, 0.15); }
+        body { background-color: var(--bg); color: #fff; font-family: 'Outfit', sans-serif; margin: 0; }
+        .terminal-container { padding: 15px; max-width: 600px; margin: 0 auto; }
+        .ticker { display: flex; gap: 15px; font-size: 11px; color: var(--gold); background: rgba(255, 215, 0, 0.05); padding: 10px; border-radius: 8px; margin-bottom: 20px; overflow-x: auto; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .brand h1 { font-size: 20px; margin: 0; color: var(--gold); }
+        .feed-item { background: var(--glass); border-left: 3px solid var(--gold); padding: 15px; border-radius: 0 12px 12px 0; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .item-info strong { display: block; color: #fff; }
+        .item-info small { color: #888; }
+        .item-amount { font-weight: bold; color: var(--gold); }
+        .status-indicator { color: #00ff88; font-size: 11px; animation: blink 2s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    </style>
 </head>
 <body>
     <div class="terminal-container">
-        <!-- Market Ticker -->
         <div class="ticker">
-            <div class="ticker-item">BTC: <span id="btc-price">Yükleniyor...</span></div>
-            <div class="ticker-item">ETH: <span id="eth-price">Yükleniyor...</span></div>
-            <div class="ticker-item">SOL: <span id="sol-price">Yükleniyor...</span></div>
+            <div class="ticker-item">BTC: <span id="btc-price">---</span></div>
+            <div class="ticker-item">ETH: <span id="eth-price">---</span></div>
+            <div class="ticker-item">SOL: <span id="sol-price">---</span></div>
         </div>
-
         <header>
-            <div class="brand">
-                <div class="glitch-dot"></div>
-                <h1>ALERTSANYA <span class="v-tag">LIVE</span></h1>
-            </div>
-            <div class="status-indicator">● CANLI VERİ AKIŞI</div>
+            <div class="brand"><h1>ALERTSANYA LIVE</h1></div>
+            <div class="status-indicator">● CANLI AKIŞ</div>
         </header>
-
-        <!-- Network Selector -->
-        <nav class="network-nav">
-            <button class="nav-btn active">TÜM AĞLAR</button>
-            <button class="nav-btn">SOLANA</button>
-            <button class="nav-btn">ETHEREUM</button>
-        </nav>
-
-        <!-- Main Feed -->
-        <main class="feed-container">
-            <div id="main-feed" class="feed-list">
-                <!-- Veriler buraya akacak -->
-                <div class="loading-state">Balina hareketleri taranıyor...</div>
-            </div>
-        </main>
+        <div id="main-feed" class="feed-list">
+            <div style="text-align: center; color: #666; padding: 20px;">Veriler senkronize ediliyor...</div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="app.js"></script>
+    <script>
+        const SUPABASE_URL = 'https://apidenfvezstmpbbxser.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwaWRlbmZ2ZXpzdG1wYmJ4c2VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMTQ0NjQsImV4cCI6MjA5Mjc5MDQ2NH0.MFebJX4cHNxMZCKss2y3YM4FJmegbGKyVP0R8M2qtNM';
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function fetchPrices() {
+            try {
+                const symbols = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT'];
+                for (let sym of symbols) {
+                    const res = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${sym}`);
+                    const data = await res.json();
+                    const elId = sym.toLowerCase().replace('usdt', '') + '-price';
+                    document.getElementById(elId).innerText = `$${parseFloat(data.price).toLocaleString()}`;
+                }
+            } catch (e) { console.error("Fiyat hatası"); }
+        }
+
+        async function fetchFeed() {
+            const { data, error } = await _supabase.from('transactions').select('*').order('created_at', { ascending: false }).limit(15);
+            if (error) return;
+            const list = document.getElementById('main-feed');
+            list.innerHTML = data.length ? '' : '<div style="text-align: center; color: #666; padding: 20px;">Henüz balina hareketi yok...</div>';
+            data.forEach(tx => {
+                list.innerHTML += `
+                    <div class="feed-item">
+                        <div class="item-info"><strong>${tx.whale_name}</strong><small>${tx.wallet_address.substring(0, 12)}...</small></div>
+                        <div class="item-amount">${tx.amount} ${tx.token_symbol}</div>
+                    </div>
+                `;
+            });
+        }
+
+        _supabase.channel('transactions').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'transactions' }, fetchFeed).subscribe();
+        setInterval(fetchPrices, 10000);
+        fetchPrices(); fetchFeed();
+    </script>
 </body>
 </html>
