@@ -1,0 +1,116 @@
+:root {
+    --bg-color: #0a0a0a;
+    --card-bg: #161616;
+    --accent: #ffd700;
+    --text: #ffffff;
+    --text-dim: #a0a0a0;
+    --buy: #00ff88;
+    --sell: #ff3366;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text);
+    font-family: 'Outfit', sans-serif;
+    overflow-x: hidden;
+}
+
+.app-container {
+    padding: 20px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.gold-dot {
+    width: 12px;
+    height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent);
+}
+
+h1 {
+    font-size: 20px;
+    margin: 0;
+}
+
+.badge {
+    background: var(--accent);
+    color: #000;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    vertical-align: middle;
+}
+
+.status-indicator {
+    font-size: 12px;
+    color: var(--buy);
+    animation: blink 2s infinite;
+}
+
+.card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    padding: 20px;
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.gauge-bar {
+    height: 10px;
+    background: #333;
+    border-radius: 5px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+
+.gauge-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ff3366, #ffd700, #00ff88);
+    box-shadow: 0 0 15px var(--accent);
+}
+
+.feed-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+}
+
+.action-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.buy { background: rgba(0, 255, 136, 0.1); color: var(--buy); }
+.sell { background: rgba(255, 51, 102, 0.1); color: var(--sell); }
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+}

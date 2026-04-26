@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhaleNexus Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+           <div class="logo-area">
+    <div class="gold-dot"></div>
+    <h1>Alertsanya <span class="badge">PRO</span></h1>
+</div>
+            <div class="status-indicator">● CANLI</div>
+        </header>
+
+        <!-- Sentiment Card -->
+        <section class="card sentiment">
+            <div class="card-header">
+                <h3>Balina Duygusu</h3>
+                <span class="info-icon">ⓘ</span>
+            </div>
+            <div class="gauge-container">
+                <div class="gauge-bar">
+                    <div class="gauge-fill" style="width: 78%;"></div>
+                </div>
+                <div class="gauge-labels">
+                    <span>AYI</span>
+                    <span class="value">78% BOĞA</span>
+                    <span>BOĞA</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Feed Section -->
+        <section class="feed-section">
+            <h3>Canlı Balina Akışı</h3>
+            <div class="feed-list">
+                <div class="feed-item">
+                    <div class="item-left">
+                        <div class="action-icon buy">↑</div>
+                        <div class="details">
+                            <span class="wallet">Alpha Whale</span>
+                            <span class="time">2dk önce</span>
+                        </div>
+                    </div>
+                    <div class="item-right">
+                        <span class="amount">+1,450 SOL</span>
+                    </div>
+                </div>
+
+                <div class="feed-item">
+                    <div class="item-left">
+                        <div class="action-icon sell">↓</div>
+                        <div class="details">
+                            <span class="wallet">Jito Validator</span>
+                            <span class="time">15dk önce</span>
+                        </div>
+                    </div>
+                    <div class="item-right">
+                        <span class="amount">-3,200 SOL</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
