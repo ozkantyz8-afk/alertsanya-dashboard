@@ -3,111 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alertsanya Dashboard</title>
+    <title>Alertsanya Terminal</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="app-container">
-        <!-- Header -->
+    <div class="terminal-container">
+        <!-- Market Ticker -->
+        <div class="ticker">
+            <div class="ticker-item">BTC: <span id="btc-price">$65,240</span></div>
+            <div class="ticker-item">ETH: <span id="eth-price">$3,450</span></div>
+            <div class="ticker-item">SOL: <span id="sol-price">$145.2</span></div>
+        </div>
+
         <header>
-            <div class="logo-area">
-                <div class="gold-dot"></div>
-                <h1>Alertsanya <span class="badge">PRO</span></h1>
+            <div class="brand">
+                <div class="glitch-dot"></div>
+                <h1>ALERTSANYA <span class="v-tag">V4.0</span></h1>
             </div>
-            <div class="status-indicator">● CANLI AKIŞ</div>
+            <div class="premium-button" onclick="showPricing()">💎 UPGRADE</div>
         </header>
 
-        <!-- Sentiment Card -->
-        <section class="card sentiment">
-            <div class="card-header">
-                <h3>Balina Duygusu</h3>
+        <!-- Network Selector -->
+        <nav class="network-nav">
+            <button class="nav-btn active">ALL</button>
+            <button class="nav-btn">SOLANA</button>
+            <button class="nav-btn">ETHEREUM</button>
+            <button class="nav-btn">MEME LIST</button>
+        </nav>
+
+        <!-- Main Feed -->
+        <main class="feed-container">
+            <div class="feed-header">
+                <h2>CANLI İSTİHBARAT AKIŞI</h2>
+                <div class="live-pulse"></div>
             </div>
-            <div class="gauge-container">
-                <div class="gauge-bar">
-                    <div class="gauge-fill" style="width: 78%;"></div>
-                </div>
-                <div class="gauge-labels">
-                    <span>AYI</span>
-                    <span class="value">78% BOĞA</span>
-                    <span>BOĞA</span>
-                </div>
+
+            <div id="main-feed" class="feed-list">
+                <!-- Veriler Supabase'den buraya akacak -->
+                <div class="loading-state">Anya verileri tarıyor...</div>
             </div>
         </section>
 
-        <!-- Live Feed Section -->
-        <section class="feed-section">
-            <h3>Gerçek Zamanlı Hareketler</h3>
-            <div class="feed-list">
-                <!-- Veriler buraya Supabase'den canlı gelecek -->
-                <p style="text-align: center; color: #666;">Balina hareketleri bekleniyor...</p>
+        <!-- Premium Lock Section -->
+        <section class="locked-section">
+            <div class="lock-overlay">
+                <span class="lock-icon">🔒</span>
+                <h3>INSIDER WALLET LIST</h3>
+                <p>Milyon dolarlık kâr eden gizli cüzdanları gör!</p>
+                <button class="buy-btn">150 STARS İLE AÇ</button>
             </div>
         </section>
     </div>
 
-    <!-- SUPABASE REALTIME SCRIPT -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        // SUPABASE BAĞLANTISI
-        const SUPABASE_URL = 'https://apidenfvezstmpbbxser.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFwaWRlbmZ2ZXpzdG1wYmJ4c2VyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMTQ0NjQsImV4cCI6MjA5Mjc5MDQ2NH0.MFebJX4cHNxMZCKss2y3YM4FJmegbGKyVP0R8M2qtNM';
-        
-        const { createClient } = supabase;
-        const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        // 1. VERİLERİ ÇEK VE LİSTELE
-        async function fetchTransactions() {
-            const { data, error } = await _supabase
-                .from('transactions')
-                .select('*')
-                .order('created_at', { ascending: false })
-                .limit(10);
-
-            if (error) {
-                console.error("Veri çekme hatası:", error);
-            } else {
-                renderTransactions(data);
-            }
-        }
-
-        // 2. EKRANA YAZDIRMA FONKSİYONU
-        function renderTransactions(transactions) {
-            const list = document.querySelector('.feed-list');
-            if (transactions.length === 0) return;
-            
-            list.innerHTML = ''; 
-
-            transactions.forEach(tx => {
-                const time = new Date(tx.created_at).toLocaleTimeString();
-                const item = `
-                    <div class="feed-item">
-                        <div class="item-left">
-                            <div class="action-icon buy">↑</div>
-                            <div class="details">
-                                <span class="wallet">${tx.whale_name || 'Gizli Balina'}</span>
-                                <span class="time">${time}</span>
-                            </div>
-                        </div>
-                        <div class="item-right">
-                            <span class="amount">${tx.amount || '---'} ${tx.token_symbol}</span>
-                        </div>
-                    </div>
-                `;
-                list.innerHTML += item;
-            });
-        }
-
-        // 3. GERÇEK ZAMANLI TAKİP
-        _supabase
-            .channel('any-channel')
-            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'transactions' }, (payload) => {
-                console.log('Yeni işlem!', payload.new);
-                fetchTransactions(); // Yeni veri gelince listeyi yenile
-            })
-            .subscribe();
-
-        // Sayfa açıldığında verileri getir
-        fetchTransactions();
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
