@@ -3,57 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alertsanya Global Intelligence</title>
+    <title>Alertsanya - Global Alpha Terminal</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #050505; --gold: #ffd700; --glass: rgba(255, 255, 255, 0.03); --border: rgba(255, 215, 0, 0.15); }
-        body { background: var(--bg); color: #fff; font-family: 'Outfit', sans-serif; margin: 0; }
+        :root { --bg: #030303; --gold: #ffd700; --green: #00ff88; --red: #ff3333; --glass: rgba(255, 255, 255, 0.02); --border: rgba(255, 215, 0, 0.1); }
+        body { background: var(--bg); color: #fff; font-family: 'Outfit', sans-serif; margin: 0; overflow-x: hidden; }
         .app-container { padding: 15px; max-width: 600px; margin: 0 auto; }
         
-        /* Premium Header */
         header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--border); }
-        .logo h1 { font-size: 22px; margin: 0; color: var(--gold); letter-spacing: 1px; }
-        .live-tag { background: rgba(0, 255, 136, 0.1); color: #00ff88; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: bold; }
+        .logo h1 { font-size: 20px; margin: 0; color: var(--gold); letter-spacing: 2px; }
+        .pulse-indicator { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--green); }
+        .pulse-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; box-shadow: 0 0 10px var(--green); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        /* Ticker Area */
-        .ticker-bar { display: flex; gap: 15px; overflow-x: auto; padding: 15px 0; font-size: 12px; color: var(--gold); }
-        .ticker-item { background: var(--glass); padding: 5px 12px; border-radius: 8px; white-space: nowrap; }
+        .market-ticker { display: flex; gap: 10px; overflow-x: auto; padding: 15px 0; border-bottom: 1px solid var(--border); }
+        .ticker-card { background: var(--glass); padding: 8px 15px; border-radius: 8px; border: 1px solid var(--border); min-width: 100px; }
+        .ticker-card span { display: block; font-size: 10px; color: #666; }
+        .ticker-card b { font-size: 13px; color: var(--gold); }
 
-        /* Feed Area */
-        .feed-title { font-size: 14px; color: #888; margin: 20px 0 10px 0; text-transform: uppercase; letter-spacing: 2px; }
+        .feed-section { margin-top: 25px; }
         .feed-item { 
-            background: var(--glass); border-left: 3px solid var(--gold); 
-            padding: 15px; border-radius: 0 12px 12px 0; margin-bottom: 15px;
-            animation: slideIn 0.3s ease-out;
+            background: var(--glass); border: 1px solid var(--border); padding: 15px; 
+            border-radius: 12px; margin-bottom: 15px; position: relative;
+            transition: transform 0.2s;
         }
-        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
-
-        .whale-name { font-weight: bold; font-size: 16px; margin-bottom: 5px; display: block; }
-        .action-desc { color: #ccc; font-size: 13px; line-height: 1.4; display: block; margin-top: 5px; }
-        .chain-badge { font-size: 10px; background: rgba(255,215,0,0.1); color: var(--gold); padding: 2px 6px; border-radius: 4px; margin-left: 5px; }
+        .feed-item:active { transform: scale(0.98); }
         
-        .footer { text-align: center; padding: 30px 0; color: #444; font-size: 12px; }
+        .item-top { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .whale-tag { font-weight: bold; font-size: 14px; color: var(--gold); }
+        .time-tag { font-size: 10px; color: #444; }
+
+        .item-main { display: flex; align-items: center; gap: 15px; }
+        .action-badge { 
+            padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold;
+            background: rgba(255, 215, 0, 0.1); color: var(--gold);
+        }
+        .item-details { flex: 1; }
+        .amount-txt { font-size: 18px; font-weight: bold; }
+        .asset-txt { font-size: 12px; color: #888; margin-left: 5px; }
+
+        .buy-button {
+            display: block; width: 100%; padding: 10px; background: var(--gold);
+            color: #000; text-align: center; border-radius: 8px; font-weight: bold;
+            text-decoration: none; margin-top: 15px; font-size: 14px;
+        }
+
+        .premium-gate {
+            background: linear-gradient(45deg, #111, #050505); padding: 20px;
+            border-radius: 15px; border: 1px dashed var(--gold); text-align: center;
+            margin-top: 30px;
+        }
     </style>
 </head>
 <body>
     <div class="app-container">
         <header>
-            <div class="logo"><h1>ALERTSANYA <span style="font-weight: 300; font-size: 12px; color: #666;">GLOBAL</span></h1></div>
-            <div class="live-tag">● LIVE INTELLIGENCE</div>
+            <div class="logo"><h1>ANYA <span style="font-weight: 300;">ALPHA</span></h1></div>
+            <div class="pulse-indicator"><div class="pulse-dot"></div> LIVE TERMINAL</div>
         </header>
 
-        <div class="ticker-bar">
-            <div class="ticker-item">BTC: <span id="btc-price">---</span></div>
-            <div class="ticker-item">ETH: <span id="eth-price">---</span></div>
-            <div class="ticker-item">SOL: <span id="sol-price">---</span></div>
+        <div class="market-ticker">
+            <div class="ticker-card"><span>BTC/USDT</span><b id="btc-price">---</b></div>
+            <div class="ticker-card"><span>ETH/USDT</span><b id="eth-price">---</b></div>
+            <div class="ticker-card"><span>SOL/USDT</span><b id="sol-price">---</b></div>
         </div>
 
-        <div class="feed-title">Canlı Balina İstihbaratı</div>
-        <div id="main-feed" class="feed-list">
-            <div style="text-align: center; padding: 40px; color: #444;">Veriler taranıyor...</div>
+        <div class="feed-section">
+            <div id="main-feed">
+                <div style="text-align: center; padding: 50px; color: #333;">İstihbarat ağından veri bekleniyor...</div>
+            </div>
         </div>
 
-        <div class="footer">Alertsanya v5.2 Intelligence Network</div>
+        <div class="premium-gate">
+            <h4 style="margin: 0; color: var(--gold);">İÇERİDEN BİLGİ (INSIDER)</h4>
+            <p style="font-size: 12px; color: #666;">En kârlı cüzdanları kopyalamak için Premium'a geç.</p>
+            <button style="background:none; border: 1px solid var(--gold); color: var(--gold); padding: 8px 15px; border-radius: 5px;">YAKINDA</button>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -63,34 +88,42 @@
         const { createClient } = supabase;
         const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        // Fiyat Takibi
         async function fetchPrices() {
             try {
                 const symbols = ['BTCUSDT', 'ETHUSDT', 'SOLUSDT'];
                 for (let sym of symbols) {
                     const res = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${sym}`);
                     const data = await res.json();
-                    const elId = sym.toLowerCase().replace('usdt', '') + '-price';
-                    document.getElementById(elId).innerText = `$${parseFloat(data.price).toLocaleString()}`;
+                    document.getElementById(sym.toLowerCase().replace('usdt', '') + '-price').innerText = `$${parseFloat(data.price).toLocaleString()}`;
                 }
             } catch (e) {}
         }
 
-        // Akış Takibi
         async function fetchFeed() {
-            const { data, error } = await _supabase.from('transactions').select('*').order('created_at', { ascending: false }).limit(15);
-            if (error) return;
+            const { data } = await _supabase.from('transactions').select('*').order('created_at', { ascending: false }).limit(10);
             const list = document.getElementById('main-feed');
-            if (data.length > 0) list.innerHTML = '';
-            
-            data.forEach(tx => {
-                list.innerHTML += `
-                    <div class="feed-item">
-                        <span class="whale-name">${tx.whale_name} <span class="chain-badge">${tx.token_symbol}</span></span>
-                        <span class="action-desc">${tx.amount}</span>
-                    </div>
-                `;
-            });
+            if (data && data.length > 0) {
+                list.innerHTML = '';
+                data.forEach(tx => {
+                    const time = new Date(tx.created_at).toLocaleTimeString();
+                    list.innerHTML += `
+                        <div class="feed-item">
+                            <div class="item-top">
+                                <span class="whale-tag">${tx.whale_name}</span>
+                                <span class="time-tag">${time}</span>
+                            </div>
+                            <div class="item-main">
+                                <div class="action-badge">${tx.tx_hash || 'SWAP'}</div>
+                                <div class="item-details">
+                                    <span class="amount-txt">${tx.amount}</span>
+                                    <span class="asset-txt">${tx.token_symbol}</span>
+                                </div>
+                            </div>
+                            <a href="https://dexscreener.com/solana/${tx.wallet_address}" target="_blank" class="buy-button">AKSİYON AL (BUY)</a>
+                        </div>
+                    `;
+                });
+            }
         }
 
         _supabase.channel('tx').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'transactions' }, fetchFeed).subscribe();
