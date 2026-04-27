@@ -3,47 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alertsanya - Professional Alpha Terminal</title>
+    <title>Alertsanya - Expert Alpha Terminal</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #050505; --gold: #ffd700; --green: #00ff88; --red: #ff3333; --border: rgba(255, 215, 0, 0.1); }
+        :root { --bg: #050505; --gold: #ffd700; --green: #00ff88; --border: rgba(255, 215, 0, 0.1); }
         body { background: var(--bg); color: #fff; font-family: 'Outfit', sans-serif; margin: 0; }
         .app-container { padding: 15px; max-width: 600px; margin: 0 auto; }
-        
         header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--border); }
         .logo h1 { font-size: 20px; margin: 0; color: var(--gold); letter-spacing: 2px; }
-
-        .feed-item { 
-            background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 15px; 
-            border-radius: 12px; margin-bottom: 20px;
-        }
-        
+        .feed-item { background: rgba(255,255,255,0.02); border: 1px solid var(--border); padding: 15px; border-radius: 12px; margin-bottom: 20px; }
         .whale-header { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid rgba(255,215,0,0.05); padding-bottom: 8px; }
         .whale-name { color: var(--gold); font-weight: bold; }
-        
+        .chain-tag { font-size: 9px; background: rgba(255,255,255,0.1); padding: 2px 5px; border-radius: 3px; margin-left: 5px; }
         .action-box { margin: 15px 0; }
         .desc-txt { font-size: 14px; color: #ccc; line-height: 1.5; }
-
         .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .action-btn { 
-            text-align: center; padding: 10px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 12px;
-            transition: opacity 0.2s;
-        }
+        .action-btn { text-align: center; padding: 10px; border-radius: 6px; text-decoration: none; font-weight: bold; font-size: 12px; transition: opacity 0.2s; }
         .btn-chart { background: var(--gold); color: #000; }
         .btn-security { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid #444; }
-        
         .tag { font-size: 10px; background: rgba(0,255,136,0.1); color: var(--green); padding: 2px 6px; border-radius: 4px; }
     </style>
 </head>
 <body>
     <div class="app-container">
         <header>
-            <div class="logo"><h1>ALERTSANYA <span style="font-weight: 300; font-size: 12px;">EXPERT</span></h1></div>
-            <div class="tag">● LIVE ALPHA</div>
+            <div class="logo"><h1>ALERTSANYA <span style="font-weight: 300; font-size: 12px;">EXPERT V6</span></h1></div>
+            <div class="tag">● LIVE MULTI-CHAIN</div>
         </header>
-
         <div id="main-feed" style="margin-top: 25px;">
-            <div style="text-align: center; color: #444; padding: 50px;">Balina istihbaratı bekleniyor...</div>
+            <div style="text-align: center; color: #444; padding: 50px;">Zeka motoru verileri senkronize ediyor...</div>
         </div>
     </div>
 
@@ -60,26 +48,29 @@
             if (data && data.length > 0) {
                 list.innerHTML = '';
                 data.forEach(tx => {
-                    const tokenAddress = tx.wallet_address; // Artık veritabanında TOKEN ADRESİ var
+                    const addr = tx.wallet_address;
+                    const isSol = tx.token_symbol === "SOLANA" || tx.token_symbol === "SOL";
+                    
+                    // AG-OZEL LINKLER
+                    const chartUrl = isSol ? `https://dexscreener.com/solana/${addr}` : `https://dexscreener.com/ethereum/${addr}`;
+                    const safetyUrl = isSol ? `https://rugcheck.xyz/tokens/${addr}` : `https://etherscan.io/address/${addr}`;
+                    const safetyLabel = isSol ? '🛡️ GÜVENLİK (RUGCHECK)' : '🔍 ETHERSCAN';
+
                     list.innerHTML += `
                         <div class="feed-item">
                             <div class="whale-header">
-                                <span class="whale-name">🐋 ${tx.whale_name}</span>
+                                <span class="whale-name">🐋 ${tx.whale_name} <span class="chain-tag">${tx.token_symbol}</span></span>
                                 <span style="font-size: 10px; color: #555;">${new Date(tx.created_at).toLocaleTimeString()}</span>
                             </div>
-                            <div class="action-box">
-                                <span class="desc-txt">${tx.amount}</span>
-                            </div>
+                            <div class="action-box"><span class="desc-txt">${tx.amount}</span></div>
                             <div class="btn-group">
-                                <a href="https://dexscreener.com/solana/${tokenAddress}" target="_blank" class="action-btn btn-chart">📈 GRAFİĞİ AÇ</a>
-                                <a href="https://rugcheck.xyz/tokens/${tokenAddress}" target="_blank" class="action-btn btn-security">🛡️ GÜVENLİK KONTROLÜ</a>
+                                <a href="${chartUrl}" target="_blank" class="action-btn btn-chart">📈 GRAFİĞİ AÇ</a>
+                                <a href="${safetyUrl}" target="_blank" class="action-btn btn-security">${safetyLabel}</a>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
                 });
             }
         }
-
         _supabase.channel('tx').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'transactions' }, fetchFeed).subscribe();
         fetchFeed();
     </script>
